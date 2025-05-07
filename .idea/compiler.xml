@@ -3,7 +3,7 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for patient-service" enabled="true">
+      <profile name="Annotation profile for Medicolab Parent" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -13,7 +13,7 @@
         </processorPath>
         <module name="patient-service" />
       </profile>
-      <profile name="Annotation profile for Medicolab Parent" enabled="true">
+      <profile name="Annotation profile for note-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -26,7 +26,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="note-service" options="-parameters" />
+      <module name="note-service" options="" />
       <module name="patient-service" options="" />
     </option>
   </component>
