@@ -1,45 +1,73 @@
 package com.medicolab.microservices.patient.service;
 
+import com.medicolab.microservices.patient.PatientRequest;
+
+import com.medicolab.microservices.patient.exception.PatientNotFoundException;
+import com.medicolab.microservices.patient.mapper.PatientMapper;
 import com.medicolab.microservices.patient.model.Patient;
 import com.medicolab.microservices.patient.repository.PatientRepository;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
 
 @Service
 public class PatientService {
 
     private final PatientRepository patientRepository;
+    private final PatientMapper mapper;
 
-    public PatientService(PatientRepository patientRepository) {
+    public PatientService(PatientRepository patientRepository, PatientMapper mapper) {
         this.patientRepository = patientRepository;
+        this.mapper = mapper;
+        ;
     }
 
     public Patient findPatientById(Integer id) {
-       Patient patient = patientRepository.findById(id)
-               .orElseThrow(() -> new NoSuchElementException("Le patient avec l' " + id + " est introuvable !"));;
+       var patient = patientRepository.findById(id)
+               .orElseThrow(() -> new PatientNotFoundException("Le patient avec l' " + id + " est introuvable !"));;
        return patient;
     }
 
 
-    public Patient updatePatient(Integer id, Patient updatedPatient) {
+    public void updatePatient(PatientRequest request) {
 
-        Patient existingPatient = patientRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Le patient avec l' " + id + " est introuvable !"));
+        var patient = patientRepository.findById(request.getId())
+                .orElseThrow(() -> new PatientNotFoundException(
+        String.format("Le patient %s n'existe pas !", request.getId())
+                ));
 
-        existingPatient.setNom(updatedPatient.getNom());
-        existingPatient.setPrenom(updatedPatient.getPrenom());
-        existingPatient.setDateDeNaissance(updatedPatient.getDateDeNaissance());
-        existingPatient.setGenre(updatedPatient.getGenre());
-        existingPatient.setAdresse(updatedPatient.getAdresse());
-        existingPatient.setTelephone(updatedPatient.getTelephone());
-
-       return patientRepository.save(existingPatient);
+        mergerPatient(patient,request);
+        patientRepository.save(patient);
 
     }
 
-    public void createPatient(Patient patient) {
-        patientRepository.save(patient);
+    private void mergerPatient(Patient patient, PatientRequest request) {
+
+        if(StringUtils.isBlank(request.getNom())) {
+            patient.setNom(request.getNom());
+        }
+        if(StringUtils.isBlank(request.getPrenom())) {
+            patient.setPrenom(request.getPrenom());
+        }
+        if(StringUtils.isBlank(request.getDateDeNaissance())) {
+            patient.setDateDeNaissance(request.getDateDeNaissance());
+        }
+        if(StringUtils.isBlank(request.getGenre())) {
+            patient.setGenre(request.getGenre());
+        }
+        if(request.getAdresse() != null) {
+            patient.setAdresse(request.getAdresse());
+        }
+        if(request.getTelephone() != null) {
+            patient.setTelephone(request.getTelephone());
+        }
+
+    }
+
+    public Integer createPatient(PatientRequest request) {
+        var patient = patientRepository.save(mapper.toPatient(request));
+        return patient.getId();
+
     }
 
     public void deletePatient(Integer id) {

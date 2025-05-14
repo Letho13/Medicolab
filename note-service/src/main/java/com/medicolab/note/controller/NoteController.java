@@ -2,7 +2,7 @@ package com.medicolab.note.controller;
 
 import com.medicolab.note.model.Note;
 import com.medicolab.note.service.NoteService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +30,12 @@ public class NoteController {
         noteService.createNote(note);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity updateNoteById(@RequestBody String id) {
+        noteService.updateNoteById(id);
+        return (ResponseEntity) ResponseEntity.status(HttpStatus.OK); // je comprend pas bien pq je dois mettre ce la comme ça
+    }
+
 
 }

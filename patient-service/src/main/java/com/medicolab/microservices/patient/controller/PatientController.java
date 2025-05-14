@@ -1,5 +1,6 @@
 package com.medicolab.microservices.patient.controller;
 
+import com.medicolab.microservices.patient.PatientRequest;
 import com.medicolab.microservices.patient.model.Patient;
 import com.medicolab.microservices.patient.repository.PatientRepository;
 import com.medicolab.microservices.patient.service.PatientService;
@@ -25,16 +26,15 @@ public class PatientController {
        return ResponseEntity.ok(patient);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity <Patient> editPatient(@PathVariable("id") Integer id, @RequestBody Patient patient) {
-       Patient updatedPatient = patientService.updatePatient(id, patient);
-       return ResponseEntity.ok(updatedPatient);
+    @PutMapping()
+    public ResponseEntity <Void> editPatient(@RequestBody @Valid PatientRequest request) {
+       patientService.updatePatient(request);
+        return (ResponseEntity.ok().build());
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<Patient> createPatient(@RequestBody @Valid Patient patient) {
-       patientService.createPatient(patient);
-       return ResponseEntity.ok(patient);
+    @PostMapping()
+    public ResponseEntity<Integer> createPatient(@RequestBody @Valid PatientRequest request) {
+       return ResponseEntity.ok(patientService.createPatient(request));
     }
 
     @PostMapping("/delete/{id}")

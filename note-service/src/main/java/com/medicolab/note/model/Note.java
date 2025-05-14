@@ -17,10 +17,19 @@ public class Note {
     public Note() {
     }
 
-    public Note(Integer patId, String patient, String note) {
+    public Note(String noteId, Integer patId, String patient, String note) {
+        this.noteId = noteId;
         this.patId = patId;
         this.patient = patient;
         this.note = note;
+    }
+
+    public String getNoteId() {
+        return noteId;
+    }
+
+    public void setNoteId(String noteId) {
+        this.noteId = noteId;
     }
 
     public Integer getPatId() {
@@ -50,7 +59,8 @@ public class Note {
     @Override
     public String toString() {
         return "Note{" +
-                "patId=" + patId +
+                "noteId='" + noteId + '\'' +
+                ", patId=" + patId +
                 ", patient='" + patient + '\'' +
                 ", note='" + note + '\'' +
                 '}';

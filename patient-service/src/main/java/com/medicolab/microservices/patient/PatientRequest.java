@@ -1,37 +1,32 @@
-package com.medicolab.microservices.patient.model;
+package com.medicolab.microservices.patient;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Entity
-public class Patient {
+public class PatientRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     private Integer id;
 
+    @NotBlank(message = "Un nom est obligatoire")
     private String nom;
 
+    @NotBlank(message = "Un prénom est obligatoire")
     private String prenom;
 
+    @NotNull(message = "Une date de naissance est obligatoire")
     private String dateDeNaissance;
 
+    @NotBlank(message = "Un genre est obligatoire")
     private String genre;
+
     private String adresse;
     private String telephone;
 
-    public Patient() {
+    public PatientRequest() {
     }
 
-    public Patient(Integer id, String nom, String prenom, String dateDeNaissance, String genre, String adresse, String telephone) {
+    public PatientRequest(Integer id, String nom, String prenom, String dateDeNaissance, String genre, String adresse, String telephone) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -49,35 +44,35 @@ public class Patient {
         this.id = id;
     }
 
-    public String getNom() {
+    public @NotBlank(message = "Un nom est obligatoire") String getNom() {
         return nom;
     }
 
-    public void setNom(String nom) {
+    public void setNom(@NotBlank(message = "Un nom est obligatoire") String nom) {
         this.nom = nom;
     }
 
-    public String getPrenom() {
+    public @NotBlank(message = "Un prénom est obligatoire") String getPrenom() {
         return prenom;
     }
 
-    public void setPrenom(String prenom) {
+    public void setPrenom(@NotBlank(message = "Un prénom est obligatoire") String prenom) {
         this.prenom = prenom;
     }
 
-    public String getDateDeNaissance() {
+    public @NotNull(message = "Une date de naissance est obligatoire") String getDateDeNaissance() {
         return dateDeNaissance;
     }
 
-    public void setDateDeNaissance(String dateDeNaissance) {
+    public void setDateDeNaissance(@NotNull(message = "Une date de naissance est obligatoire") String dateDeNaissance) {
         this.dateDeNaissance = dateDeNaissance;
     }
 
-    public String getGenre() {
+    public @NotBlank(message = "Un genre est obligatoire") String getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(@NotBlank(message = "Un genre est obligatoire") String genre) {
         this.genre = genre;
     }
 
@@ -99,11 +94,11 @@ public class Patient {
 
     @Override
     public String toString() {
-        return "Patient{" +
+        return "PatientRequest{" +
                 "id=" + id +
                 ", nom='" + nom + '\'' +
                 ", prenom='" + prenom + '\'' +
-                ", dateDeNaissance=" + dateDeNaissance +
+                ", dateDeNaissance='" + dateDeNaissance + '\'' +
                 ", genre='" + genre + '\'' +
                 ", adresse='" + adresse + '\'' +
                 ", telephone='" + telephone + '\'' +

@@ -1,5 +1,6 @@
 package com.medicolab.note.service;
 
+import com.medicolab.note.exception.NoteNotFoundException;
 import com.medicolab.note.model.Note;
 import com.medicolab.note.repository.NoteRepository;
 import org.springframework.http.ResponseEntity;
@@ -29,4 +30,15 @@ public class NoteService {
         return (ResponseEntity<List<Note>>) patientNotes;
     }
 
+    public Note updateNoteById(String id) {
+        Note note = new Note();
+        Note existingNote = noteRepository.findById(id)
+                        .orElseThrow(() -> new NoteNotFoundException(String.format("La note n'existe %s pas", id)
+                        ));
+        existingNote.setPatId(note.getPatId());
+        existingNote.setPatient(note.getPatient());
+        existingNote.setNote(note.getNote());
+
+       return  noteRepository.save(note);
+    }
 }
