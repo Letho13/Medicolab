@@ -10,6 +10,9 @@
         <option value="$PROJECT_DIR$/Services/discovery/pom.xml" />
         <option value="$PROJECT_DIR$/Services/risque-service/pom.xml" />
         <option value="$PROJECT_DIR$/Services/gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/Services/config-server/pom.xml" />
+        <option value="$PROJECT_DIR$/Services/patient-service/pom.xml" />
+        <option value="$PROJECT_DIR$/Services/note-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
