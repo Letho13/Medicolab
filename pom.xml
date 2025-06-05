@@ -17,14 +17,7 @@
     <artifactId>medicolab</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <modules>
-        <module>Services/patient-service</module>
-        <module>Services/note-service</module>
-        <module>Services/config-server</module>
-        <module>Services/discovery</module>
-        <module>Services/risque-service</module>
-        <module>Services/gateway</module>
-    </modules>
+
 
 
     <name>Medicolab Parent</name>
@@ -56,16 +49,6 @@
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>3.4.5</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.13.0</version>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
