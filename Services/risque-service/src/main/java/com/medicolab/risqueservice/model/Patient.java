@@ -1,36 +1,30 @@
-package com.medicolab.microservices.patient.model;
+package com.medicolab.risqueservice.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
 
-public class PatientRequest {
+
+
+public class Patient {
 
 
     private Integer id;
 
-    @NotBlank(message = "Un nom est obligatoire")
     private String nom;
 
-    @NotBlank(message = "Un prénom est obligatoire")
     private String prenom;
 
-    @NotNull(message = "Une date de naissance est obligatoire")
     private LocalDate dateDeNaissance;
 
-    @NotBlank(message = "Un genre est obligatoire")
     private String genre;
-
     private String adresse;
     private String telephone;
 
-    public PatientRequest() {
+    public Patient() {
     }
 
-    public PatientRequest(Integer id, String nom, String prenom, LocalDate dateDeNaissance, String genre, String adresse, String telephone) {
+    public Patient(Integer id, String nom, String prenom, LocalDate dateDeNaissance, String genre, String adresse, String telephone) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -48,35 +42,35 @@ public class PatientRequest {
         this.id = id;
     }
 
-    public @NotBlank(message = "Un nom est obligatoire") String getNom() {
+    public String getNom() {
         return nom;
     }
 
-    public void setNom(@NotBlank(message = "Un nom est obligatoire") String nom) {
+    public void setNom(String nom) {
         this.nom = nom;
     }
 
-    public @NotBlank(message = "Un prénom est obligatoire") String getPrenom() {
+    public String getPrenom() {
         return prenom;
     }
 
-    public void setPrenom(@NotBlank(message = "Un prénom est obligatoire") String prenom) {
+    public void setPrenom(String prenom) {
         this.prenom = prenom;
     }
 
-    public @NotNull(message = "Une date de naissance est obligatoire") LocalDate getDateDeNaissance() {
+    public LocalDate getDateDeNaissance() {
         return dateDeNaissance;
     }
 
-    public void setDateDeNaissance(@NotNull(message = "Une date de naissance est obligatoire") LocalDate dateDeNaissance) {
+    public void setDateDeNaissance(LocalDate dateDeNaissance) {
         this.dateDeNaissance = dateDeNaissance;
     }
 
-    public @NotBlank(message = "Un genre est obligatoire") String getGenre() {
+    public String getGenre() {
         return genre;
     }
 
-    public void setGenre(@NotBlank(message = "Un genre est obligatoire") String genre) {
+    public void setGenre(String genre) {
         this.genre = genre;
     }
 
@@ -96,20 +90,24 @@ public class PatientRequest {
         this.telephone = telephone;
     }
 
-
-
     @Override
     public String toString() {
-        return "PatientRequest{" +
+        return "Patient{" +
                 "id=" + id +
                 ", nom='" + nom + '\'' +
                 ", prenom='" + prenom + '\'' +
-                ", dateDeNaissance='" + dateDeNaissance + '\'' +
+                ", dateDeNaissance=" + dateDeNaissance +
                 ", genre='" + genre + '\'' +
                 ", adresse='" + adresse + '\'' +
                 ", telephone='" + telephone + '\'' +
                 '}';
     }
 
-
+    public int getAge() {
+        LocalDate birthdate = getDateDeNaissance();
+        LocalDate now = LocalDate.now();
+        return Period.between(birthdate, now).getYears();
+    }
 }
+
+

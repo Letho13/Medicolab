@@ -1,6 +1,6 @@
 package com.medicolab.microservices.patient.mapper;
 
-import com.medicolab.microservices.patient.PatientRequest;
+import com.medicolab.microservices.patient.model.PatientRequest;
 import com.medicolab.microservices.patient.model.Patient;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package com.medicolab.microservices.patient.service;
 
-import com.medicolab.microservices.patient.PatientRequest;
+import com.medicolab.microservices.patient.model.PatientRequest;
 
 import com.medicolab.microservices.patient.exception.PatientNotFoundException;
 import com.medicolab.microservices.patient.mapper.PatientMapper;
@@ -8,6 +8,8 @@ import com.medicolab.microservices.patient.model.Patient;
 import com.medicolab.microservices.patient.repository.PatientRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -22,8 +24,12 @@ public class PatientService {
         ;
     }
 
+    public List<Patient> getAll() {
+        return patientRepository.findAll();
+    }
+
     public Patient findPatientById(Integer id) {
-       var patient = patientRepository.findById(id)
+       Patient patient = patientRepository.findById(id)
                .orElseThrow(() -> new PatientNotFoundException("Le patient avec l' " + id + " est introuvable !"));;
        return patient;
     }
@@ -31,7 +37,7 @@ public class PatientService {
 
     public void updatePatient(PatientRequest request) {
 
-        var patient = patientRepository.findById(request.getId())
+        Patient patient = patientRepository.findById(request.getId())
                 .orElseThrow(() -> new PatientNotFoundException(
         String.format("Le patient %s n'existe pas !", request.getId())
                 ));
@@ -43,16 +49,16 @@ public class PatientService {
 
     private void mergerPatient(Patient patient, PatientRequest request) {
 
-        if(StringUtils.isBlank(request.getNom())) {
+        if(!StringUtils.isBlank(request.getNom())) {
             patient.setNom(request.getNom());
         }
-        if(StringUtils.isBlank(request.getPrenom())) {
+        if(!StringUtils.isBlank(request.getPrenom())) {
             patient.setPrenom(request.getPrenom());
         }
-        if(StringUtils.isBlank(request.getDateDeNaissance())) {
+        if (request.getDateDeNaissance() != null) {
             patient.setDateDeNaissance(request.getDateDeNaissance());
         }
-        if(StringUtils.isBlank(request.getGenre())) {
+        if(!StringUtils.isBlank(request.getGenre())) {
             patient.setGenre(request.getGenre());
         }
         if(request.getAdresse() != null) {
@@ -65,7 +71,7 @@ public class PatientService {
     }
 
     public Integer createPatient(PatientRequest request) {
-        var patient = patientRepository.save(mapper.toPatient(request));
+        Patient patient = patientRepository.save(mapper.toPatient(request));
         return patient.getId();
 
     }
@@ -73,5 +79,11 @@ public class PatientService {
     public void deletePatient(Integer id) {
         patientRepository.deleteById(id);
     }
+
+    public boolean patientOverThirty(Integer id) {
+        Patient patient = findPatientById(id);
+       return patient.getAge() > 30;
+    }
+
 
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class NoteService {
@@ -23,22 +24,42 @@ public class NoteService {
         noteRepository.insert(note);
     }
 
-    public ResponseEntity <List<Note>>GetPatientNotes (Integer patId){
+    public void createAllNotes(List<Note> notes) {
+        noteRepository.saveAll(notes);
+    }
+
+
+    public List<Note> getPatientNotes (Integer patId){
         List<Note> notes = noteRepository.findAll();
         List<Note> patientNotes = notes.stream()
-                .filter(note -> note.getPatId().equals(patId)).toList();
-        return (ResponseEntity<List<Note>>) patientNotes;
+                .filter(note -> note.getPatId().equals(patId))
+                .toList();
+
+            return patientNotes;
+
     }
 
-    public Note updateNoteById(String id) {
-        Note note = new Note();
-        Note existingNote = noteRepository.findById(id)
-                        .orElseThrow(() -> new NoteNotFoundException(String.format("La note n'existe %s pas", id)
-                        ));
-        existingNote.setPatId(note.getPatId());
-        existingNote.setPatient(note.getPatient());
-        existingNote.setNote(note.getNote());
-
-       return  noteRepository.save(note);
+    public void deleteNote (String id) {
+        noteRepository.deleteById(id);
     }
+
+//    public Note updateNoteById(Note note) {
+//
+//        Note existingNote = noteRepository.findNoteByPatientId(note.getPatId())
+//                        .orElseThrow(() -> new NoteNotFoundException(String.format("La note n'existe %s pas", id)
+//                        ));
+//        existingNote.setPatient(note.getPatient());
+//        existingNote.setNote(note.getNote());
+//
+//       return  noteRepository.save(note);
+//    }
+
+    public String niveauDeRisque (Note note){
+
+
+
+        return "";
+    }
+
+
 }

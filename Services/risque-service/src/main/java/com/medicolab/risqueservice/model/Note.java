@@ -1,13 +1,8 @@
-package com.medicolab.note.model;
+package com.medicolab.risqueservice.model;
 
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(value = "note")
 public class Note {
 
-    @Id
     private String noteId;
     private Integer patId;
     private String patient;
@@ -64,4 +59,5 @@ public class Note {
                 ", note='" + note + '\'' +
                 '}';
     }
+
 }

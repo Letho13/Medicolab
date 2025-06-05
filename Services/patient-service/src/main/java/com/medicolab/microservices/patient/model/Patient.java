@@ -4,12 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.Period;
 
 @Entity
 public class Patient {
@@ -22,7 +19,7 @@ public class Patient {
 
     private String prenom;
 
-    private String dateDeNaissance;
+    private LocalDate dateDeNaissance;
 
     private String genre;
     private String adresse;
@@ -31,7 +28,7 @@ public class Patient {
     public Patient() {
     }
 
-    public Patient(Integer id, String nom, String prenom, String dateDeNaissance, String genre, String adresse, String telephone) {
+    public Patient(Integer id, String nom, String prenom, LocalDate dateDeNaissance, String genre, String adresse, String telephone) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -65,11 +62,11 @@ public class Patient {
         this.prenom = prenom;
     }
 
-    public String getDateDeNaissance() {
+    public LocalDate getDateDeNaissance() {
         return dateDeNaissance;
     }
 
-    public void setDateDeNaissance(String dateDeNaissance) {
+    public void setDateDeNaissance(LocalDate dateDeNaissance) {
         this.dateDeNaissance = dateDeNaissance;
     }
 
@@ -108,5 +105,11 @@ public class Patient {
                 ", adresse='" + adresse + '\'' +
                 ", telephone='" + telephone + '\'' +
                 '}';
+    }
+
+    public int getAge () {
+        LocalDate birthdate = getDateDeNaissance();
+        LocalDate now = LocalDate.now();
+        return Period.between(birthdate,now).getYears();
     }
 }
