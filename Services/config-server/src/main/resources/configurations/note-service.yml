@@ -1,4 +1,9 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://admin:pass@mongo_note_db:27017/note_db
+      uri: mongodb://admin:pass@mongo_note_db:27017/note_db?authSource=admin
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/

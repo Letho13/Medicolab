@@ -4,14 +4,20 @@ spring:
       discovery:
         locator:
           enabled: true
-      routes:
-        - id: patient-service
-          uri: lb:http://PATIENT-SERVICE
-          predicates:
-            - Path=/api/patient/**
-        - id: note-service
-          uri: lb:http://NOTE-SERVICE
-          predicates:
-            - Path=/api/note/**
+#      routes:
+#        - id: patient-service
+#          uri: lb:http://PATIENT-SERVICE
+#          predicates:
+#            - Path=/api/patient/**
+#        - id: note-service
+#          uri: lb:http://NOTE-SERVICE
+#          predicates:
+#            - Path=/api/note/**
+#        - id: risque-service
+#          uri: lb:http://RISQUE-SERVICE
+#          predicates:
+#            - Path=/api/risque/**
+
 server:
   port: 8222
+
