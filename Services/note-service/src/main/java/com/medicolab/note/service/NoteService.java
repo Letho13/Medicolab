@@ -21,7 +21,7 @@ public class NoteService {
 
 
     public void createNote (Note note) {
-        noteRepository.insert(note);
+        noteRepository.save(note);
     }
 
     public void createAllNotes(List<Note> notes) {
