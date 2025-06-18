@@ -24,6 +24,7 @@ public class NoteService {
         noteRepository.save(note);
     }
 
+
     public void createAllNotes(List<Note> notes) {
         noteRepository.saveAll(notes);
     }

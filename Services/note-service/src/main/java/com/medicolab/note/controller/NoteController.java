@@ -25,12 +25,6 @@ public class NoteController {
     @GetMapping("/patient/{id}")
     public ResponseEntity<?> getPatientNotes(@PathVariable(name="id") Integer id) {
         List<Note> patientNotes = noteService.getPatientNotes(id);
-        if (patientNotes.isEmpty()) {
-
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("erreur", String.format("Il n'y a pas de note pour le patient %s", id));
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-        }
         return ResponseEntity.ok(patientNotes);
     }
 

@@ -28,7 +28,7 @@ public class SecurityConfiguration {
                 .authorizeExchange(exchange -> exchange
                         .anyExchange().permitAll()
                 )
-                .formLogin(ServerHttpSecurity.FormLoginSpec::disable);  // désactiver le formulaire
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable);
 
         return http.build();
     }
@@ -37,7 +37,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOrigins(List.of("http://localhost:5173","http://front-service"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
