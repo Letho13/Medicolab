@@ -66,6 +66,8 @@ services:
       EUREKA_SERVER_URL: http://discovery-service:8761/eureka/
       SPRING_PROFILES_ACTIVE: docker
       SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+      JWT_SECRET: "test_clef_longue_pour_securiser_18_06_2025"
+      JWT_EXPIRATION: 3600000
     build:
       context: ./Services/gateway
       dockerfile: Dockerfile
@@ -79,11 +81,11 @@ services:
       - "8222:8222"
     networks:
       - microservices-net
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8222/actuator/health" ]
-      interval: 5s
-      timeout: 3s
-      retries: 5
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:8222/actuator/health" ]
+#      interval: 5s
+#      timeout: 3s
+#      retries: 5
 
   note-service:
     environment:
