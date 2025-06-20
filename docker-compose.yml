@@ -1,0 +1,206 @@
+services:
+  postgresql:
+    container_name: patient_base_de_donnee
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: patient_db
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  patient-service:
+    environment:
+      EUREKA_SERVER_URL: http://discovery-service:8761/eureka/
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+    build:
+      context: ./Services/patient-service
+      dockerfile: Dockerfile
+    container_name: patient-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+      postgresql:
+        condition: service_healthy
+    networks:
+      - microservices-net
+
+  discovery-service:
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+    build:
+      context: ./Services/discovery
+      dockerfile: Dockerfile
+    container_name: discovery-service
+    ports:
+      - "8761:8761"
+    depends_on:
+      config-server:
+        condition: service_healthy
+    networks:
+      - microservices-net
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  gateway-service:
+    environment:
+      EUREKA_SERVER_URL: http://discovery-service:8761/eureka/
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+#      JWT_SECRET: "test_clef_longue_pour_securiser_18_06_2025__forte!"
+#      JWT_EXPIRATION: 3600000
+    build:
+      context: ./Services/gateway
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+    ports:
+      - "8222:8222"
+    networks:
+      - microservices-net
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:8222/actuator/health" ]
+#      interval: 5s
+#      timeout: 3s
+#      retries: 5
+
+  note-service:
+    environment:
+      EUREKA_SERVER_URL: http://discovery-service:8761/eureka/
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+    build:
+      context: ./Services/note-service
+      dockerfile: Dockerfile
+    container_name: note-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    networks:
+      - microservices-net
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8083/actuator/health" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  risque-service:
+    environment:
+      EUREKA_SERVER_URL: http://discovery-service:8761/eureka/
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+    build:
+      context: ./Services/risque-service
+      dockerfile: Dockerfile
+    container_name: risque-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+    networks:
+      - microservices-net
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8082/actuator/health" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+
+  config-server:
+    environment:
+      SPRING_PROFILES_ACTIVE: native
+    build:
+      context: ./Services/config-server
+      dockerfile: Dockerfile
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - microservices-net
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/actuator/health" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - microservices-net
+
+  mongodb:
+    image: mongo
+    container_name: mongo_note_db
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=pass
+    networks:
+      - microservices-net
+    healthcheck:
+      test: [ "CMD", "mongosh", "-u", "admin", "-p", "pass", "--authenticationDatabase", "admin", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  front-service:
+    build:
+      context: ./medicolabFrontService
+      dockerfile: Dockerfile
+    container_name: front-service
+    ports:
+      - "5173:80"
+    environment:
+      - VITE_API_BASE_URL=http://gateway-service:8222
+    depends_on:
+      - gateway-service
+    networks:
+      - microservices-net
+
+
+networks:
+  microservices-net:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
+  mongo:
