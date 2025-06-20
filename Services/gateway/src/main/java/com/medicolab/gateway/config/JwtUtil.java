@@ -2,48 +2,67 @@ package com.medicolab.gateway.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Service
 public class JwtUtil {
 
-    private final SecretKey secretKey = Keys.hmacShaKeyFor("test_clef_longue_pour_securiser_18_06_2025".getBytes());
+//    private final SecretKey secretKey = Keys.hmacShaKeyFor(
+//            "test_clef_longue_pour_securiser_18_06_2025__forte!".getBytes(StandardCharsets.UTF_8)
+//    );
+//
+//    private final long expirationTime = 3600 * 1000;
 
-    private final long expirationTime = 3600 * 1000;
+    @Value("${security.jwt.secret}")
+    private String secret;
+
+    @Value("${security.jwt.expiration}")
+    private long expirationTime;
+
+    private SecretKey secretKey;
+
+    @PostConstruct
+    public void init() {
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
 
     public String generateToken(String username) {
         return Jwts.builder()
-                .subject(username)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(secretKey)
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public boolean validateToken (String token){
         try{
-            Jwts.parser()
-                    .verifyWith(secretKey)
+            Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
                     .build()
-                    .parseSignedClaims(token);
+                    .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
+            System.err.println("[validateToken] Exception: " + e.getMessage());
             return false;
         }
     }
 
 
     public String getUsernameFromToken(String token) {
-            Claims claims = Jwts.parser()
-                    .verifyWith(secretKey)
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
                     .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+                    .parseClaimsJws(token)
+                    .getBody();
             return claims.getSubject();
 
     }

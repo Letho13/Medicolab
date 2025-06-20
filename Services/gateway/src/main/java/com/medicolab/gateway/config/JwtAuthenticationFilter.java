@@ -1,73 +1,75 @@
 package com.medicolab.gateway.config;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-import java.util.Objects;
 
-@Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter implements WebFilter {
+public class JwtAuthenticationFilter implements WebFilter {
 
 
-    private final JwtUtil jwtService;
+    private final JwtUtil jwtUtil;
     private final MapReactiveUserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(JwtUtil jwtService, MapReactiveUserDetailsService userDetailsService) {
-        this.jwtService = jwtService;
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, MapReactiveUserDetailsService userDetailsService) {
+        this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, IOException {
-        final String authHeader = request.getHeader("Authorization");
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        try {
-            final String jwt = authHeader.substring(7);
-            final String userEmail = jwtService.getUsernameFromToken(jwt);
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (userEmail != null && authentication == null) {
-               Mono<UserDetails> userDetails = this.userDetailsService.findByUsername(userEmail);
-                if (jwtService.validateToken(jwt)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            Objects.requireNonNull(userDetails.block()).getAuthorities()
-                    );
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
-            }
-            filterChain.doFilter(request, response);
-        } catch (Exception exception) {
-            System.out.println(exception);
-        }
-    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        return null;
+
+        String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return chain.filter(exchange);
+        }
+//        //debug
+//        String token = authHeader.substring(7);
+//        if (!jwtUtil.validateToken(token)) {
+//            // Token invalide, on bloque
+//            return Mono.error(new RuntimeException("Invalid token"));
+//        }
+
+        String jwt = authHeader.substring(7);
+
+        String username;
+        try {
+            username = jwtUtil.getUsernameFromToken(jwt);
+        } catch (Exception e) {
+
+            return chain.filter(exchange);
+        }
+
+        if (username == null) {
+            return chain.filter(exchange);
+        }
+
+        return userDetailsService.findByUsername(username)
+                .flatMap(userDetails -> {
+                    if (jwtUtil.validateToken(jwt)) {
+                        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+
+                        return chain.filter(exchange)
+                                .contextWrite(ReactiveSecurityContextHolder.withSecurityContext(
+                                        Mono.just(new SecurityContextImpl(auth))
+                                ));
+                    } else {
+                        return chain.filter(exchange);
+                    }
+                })
+                .switchIfEmpty(chain.filter(exchange));
     }
+
+
 }
+
 
 

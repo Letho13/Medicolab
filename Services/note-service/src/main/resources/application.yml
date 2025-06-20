@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: note-service
+
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
+  data:
+    mongodb:
+      uri: "mongodb://${MONGO_INITDB_ROOT_USERNAME:admin}:${MONGO_INITDB_ROOT_PASSWORD:pass}@localhost:27017/mongo_note_db?authSource=admin"
+
+server:
+  port: 8083
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"
+
+eureka:
+  instance:
+    hostname: note-service
+    prefer-ip-address: true
+    health-check-url-path: /actuator/health
+    status-page-url-path: /actuator/info
+    metadata-map:
+      management:
+        port: 8083
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    com.medicolab.note: DEBUG
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.mongodb.driver: INFO
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: docker
+    import: "optional:configserver:http://config-server:8888"
+
+  data:
+    mongodb:
+      uri: "mongodb://admin:pass@mongo_note_db:27017/note_db?authSource=admin"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: "http://discovery-service:8761/eureka"
