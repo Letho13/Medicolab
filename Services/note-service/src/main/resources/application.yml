@@ -7,7 +7,7 @@ spring:
 
   data:
     mongodb:
-      uri: "mongodb://${MONGO_INITDB_ROOT_USERNAME:admin}:${MONGO_INITDB_ROOT_PASSWORD:pass}@localhost:27017/mongo_note_db?authSource=admin"
+      uri: "mongodb://${MONGO_INITDB_ROOT_USERNAME:admin}:${MONGO_INITDB_ROOT_PASSWORD:pass}@localhost:27017/note_db?authSource=admin"
 
 server:
   port: 8083
