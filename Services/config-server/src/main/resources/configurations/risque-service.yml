@@ -13,7 +13,7 @@ eureka:
     register-with-eureka: true
     registry-fetch-interval-seconds: 5
   instance:
-    prefer-ip-address: true
+    prefer-ip-address: false
     hostname: risque-service
 
 logging:

@@ -1,5 +1,6 @@
 package com.medicolab.note.service;
 
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -8,9 +9,9 @@ public class PatientClient {
 
     private final RestTemplate restTemplate;
 
-    private final String baseUrl = "http://localhost:8080/api/patient/";
+    private final String baseUrl = "http://patient-service/api/patient/";
 
-    public PatientClient(RestTemplate restTemplate) {
+    public PatientClient(@LoadBalanced RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

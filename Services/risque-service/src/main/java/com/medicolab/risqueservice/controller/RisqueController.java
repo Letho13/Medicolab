@@ -1,13 +1,12 @@
 package com.medicolab.risqueservice.controller;
 
-import com.medicolab.risqueservice.model.Patient;
 import com.medicolab.risqueservice.service.RisqueService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+
 @RequestMapping("/api/risque")
+@RestController
 public class RisqueController {
 
     private final RisqueService risqueService;

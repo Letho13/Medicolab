@@ -22,7 +22,7 @@ services:
   patient-service:
     environment:
       EUREKA_SERVER_URL: http://discovery-service:8761/eureka/
-      SPRING_PROFILES_ACTIVE: native
+      SPRING_PROFILES_ACTIVE: docker
       SPRING_CLOUD_CONFIG_URI: http://config-server:8888
     build:
       context: ./Services/patient-service
@@ -42,7 +42,7 @@ services:
 
   discovery-service:
     environment:
-      SPRING_PROFILES_ACTIVE: native
+      SPRING_PROFILES_ACTIVE: docker
       SPRING_CLOUD_CONFIG_URI: http://config-server:8888
     build:
       context: ./Services/discovery
@@ -64,8 +64,10 @@ services:
   gateway-service:
     environment:
       EUREKA_SERVER_URL: http://discovery-service:8761/eureka/
-      SPRING_PROFILES_ACTIVE: native
+      SPRING_PROFILES_ACTIVE: docker
       SPRING_CLOUD_CONFIG_URI: http://config-server:8888
+#      JWT_SECRET: "test_clef_longue_pour_securiser_18_06_2025__forte!"
+#      JWT_EXPIRATION: 3600000
     build:
       context: ./Services/gateway
       dockerfile: Dockerfile
@@ -79,16 +81,16 @@ services:
       - "8222:8222"
     networks:
       - microservices-net
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8222/actuator/health" ]
-      interval: 5s
-      timeout: 3s
-      retries: 5
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:8222/actuator/health" ]
+#      interval: 5s
+#      timeout: 3s
+#      retries: 5
 
   note-service:
     environment:
       EUREKA_SERVER_URL: http://discovery-service:8761/eureka/
-      SPRING_PROFILES_ACTIVE: native
+      SPRING_PROFILES_ACTIVE: docker
       SPRING_CLOUD_CONFIG_URI: http://config-server:8888
     build:
       context: ./Services/note-service
@@ -114,7 +116,7 @@ services:
   risque-service:
     environment:
       EUREKA_SERVER_URL: http://discovery-service:8761/eureka/
-      SPRING_PROFILES_ACTIVE: native
+      SPRING_PROFILES_ACTIVE: docker
       SPRING_CLOUD_CONFIG_URI: http://config-server:8888
     build:
       context: ./Services/risque-service
@@ -187,33 +189,11 @@ services:
     ports:
       - "5173:80"
     environment:
-      - VITE_API_BASE_URL=http://localhost:8222
+      - VITE_API_BASE_URL=http://gateway-service:8222
     depends_on:
       - gateway-service
     networks:
       - microservices-net
-
-  security-config:
-    environment:
-      SPRING_PROFILES_ACTIVE: native
-    build:
-      context: ./Services/security-config
-      dockerfile: Dockerfile
-    container_name: security-config
-    ports:
-      - "8081:8081"
-    depends_on:
-      config-server:
-        condition: service_healthy
-      discovery-service:
-        condition: service_healthy
-    networks:
-      - microservices-net
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8081/actuator/health" ]
-      interval: 5s
-      timeout: 3s
-      retries: 5
 
 
 networks:
