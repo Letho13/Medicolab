@@ -30,12 +30,6 @@ public class JwtAuthenticationFilter implements WebFilter {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return chain.filter(exchange);
         }
-//        //debug
-//        String token = authHeader.substring(7);
-//        if (!jwtUtil.validateToken(token)) {
-//            // Token invalide, on bloque
-//            return Mono.error(new RuntimeException("Invalid token"));
-//        }
 
         String jwt = authHeader.substring(7);
 

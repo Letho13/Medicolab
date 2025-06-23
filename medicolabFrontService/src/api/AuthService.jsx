@@ -11,7 +11,14 @@ export async function login(username, password) {
     return data;
 }
 
+function defaultLogin() {
+    const username = import.meta.env.VITE_LOGIN_USERNAME;
+    const password = import.meta.env.VITE_LOGIN_PASSWORD;
+    return login(username, password)
+}
+
 export function getToken() {
+    defaultLogin();
     return localStorage.getItem('token');
 }
 

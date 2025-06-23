@@ -133,7 +133,7 @@ function App() {
         <div className="container">
           <Routes>
 
-            <Route path="/" element={<Navigate to={"/patient/*"} />} />
+            <Route path="/" element={<Navigate to={"/patient"} />} />
 
             <Route
               path="/patient"
