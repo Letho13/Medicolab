@@ -15,9 +15,6 @@ export async function getNotesByPatientId(id) {
     return await axiosInstance.get(`${NOTE_API_PATH}/patient/${id}`);
 }
 
-// export async function updatePatient(patient) {
-//     return await axios.put(API_URL, patient);
-// }
 
 export async function deleteNote(id) {
     return await axiosInstance.delete(`${NOTE_API_PATH}/delete/${id}`);

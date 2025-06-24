@@ -3,7 +3,7 @@ import React from "react";
 const Header = ({ toggleModal, nbOfPatients }) => {
     return (
         <header>
-            <h1>Gestion Patients ({nbOfPatients})</h1>
+            <h1>Gestion Patients </h1>
         </header>
     );
 };
