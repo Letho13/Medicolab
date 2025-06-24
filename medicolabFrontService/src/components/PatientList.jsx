@@ -11,7 +11,7 @@ const PatientList = ({ data }) => {
 
  return (
     <main>
-      <h2>Liste des Patients ({data.length})</h2>
+      <h2>Liste des Patients</h2>
       <table border="1" cellPadding="8" style={{ borderCollapse: "collapse", width: "100%" }}>
         <thead>
           <tr>
@@ -25,7 +25,7 @@ const PatientList = ({ data }) => {
         </thead>
         <tbody>
           {data.map((patient) => (
-            <tr 
+            <tr
               key={patient.id}
               onClick={() => navigate(`/patient/${patient.id}`)}
               style={{ cursor: "pointer", backgroundColor: "#fff" }}

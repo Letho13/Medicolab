@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./PatientDetail.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { deletePatient, getPatient } from "../api/PatientService.js";
 import { toastError, toastSuccess } from "../api/ToastService";
 import NoteList from "./NoteList";
@@ -8,7 +8,7 @@ import { getNotesByPatientId, saveNote, deleteNote } from "../api/NoteService.js
 import NoteForm from "./NoteForm";
 import { getAnalyseByPatientId } from "../api/RisqueService.js";
 
-const PatientDetails = ({ updatePatient }) => {
+const PatientDetails = ({ updatePatient, deletePatient }) => {
   const inputRef = useRef();
   const [patient, setPatient] = useState({
     id: "",
@@ -23,6 +23,8 @@ const PatientDetails = ({ updatePatient }) => {
   const [notes, setNotes] = useState([]);
 
   const [risque, setRisque] = useState([""]);
+
+  const navigate = useNavigate();
 
   const { id } = useParams();
 
@@ -82,11 +84,24 @@ const PatientDetails = ({ updatePatient }) => {
     setPatient({ ...patient, [event.target.name]: event.target.value });
   };
 
+  const handleDeletePatient = async () => {
+    if (!window.confirm("Voulez-vous vraiment supprimer ce patient?")) return;
+
+    try {
+      await deletePatient(patient.id);
+      // toastSuccess("Patient supprimé");
+      navigate("/patient");
+    } catch (error) {
+      toastError("Erreur lors de la suppression du patient");
+      console.error(error);
+    }
+  };
+
   const onUpdatePatient = async (event) => {
     event.preventDefault();
     await updatePatient(patient);
-    fetchPatient(id);
-    toastSuccess("Patient Updated");
+
+    // toastSuccess("Patient Updated");
   };
 
   useEffect(() => {
@@ -186,13 +201,7 @@ const PatientDetails = ({ updatePatient }) => {
               </button>
               <button
                 className="btn btn-danger"
-                onClick={() => {
-                  if (
-                    window.confirm("Voulez-vous vraiment supprimer ce patient?")
-                  ) {
-                    deletePatient(patient.id);
-                  }
-                }}
+                onClick={handleDeletePatient}
                 type="button"
               >
                 Supprimer
@@ -203,7 +212,7 @@ const PatientDetails = ({ updatePatient }) => {
             <NoteList notes={notes} onDelete={handleDeleteNote} />
             <NoteForm
               patId={id}
-              patientName={`${patient.nom} ${patient.prenom}`}
+              patientName={`${patient.nom}`}
               onNoteAdded={() => fetchNotes(id)}
             />
           </div>
