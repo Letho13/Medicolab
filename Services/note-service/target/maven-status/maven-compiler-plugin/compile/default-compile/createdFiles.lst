@@ -1,0 +1,8 @@
+com\medicolab\note\NoteServiceApplication.class
+com\medicolab\note\exception\NoteNotFoundException.class
+com\medicolab\note\model\Note.class
+com\medicolab\note\repository\NoteRepository.class
+com\medicolab\note\configuration\RestTemplateConfig.class
+com\medicolab\note\service\NoteService.class
+com\medicolab\note\controller\NoteController.class
+com\medicolab\note\service\PatientClient.class

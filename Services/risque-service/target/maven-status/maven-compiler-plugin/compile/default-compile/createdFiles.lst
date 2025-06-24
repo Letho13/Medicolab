@@ -1,0 +1,9 @@
+com\medicolab\risqueservice\model\Patient.class
+com\medicolab\risqueservice\repository\PatientClient.class
+com\medicolab\risqueservice\RisqueServiceApplication.class
+com\medicolab\risqueservice\model\Risque.class
+com\medicolab\risqueservice\service\RisqueService.class
+com\medicolab\risqueservice\repository\NoteClient.class
+com\medicolab\risqueservice\controller\RisqueController.class
+com\medicolab\risqueservice\exception\NoteClientFallback.class
+com\medicolab\risqueservice\model\Note.class

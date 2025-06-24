@@ -1,0 +1,9 @@
+C:\DEV\Repo\Medicolab\Services\risque-service\src\main\java\com\medicolab\risqueservice\controller\RisqueController.java
+C:\DEV\Repo\Medicolab\Services\risque-service\src\main\java\com\medicolab\risqueservice\exception\NoteClientFallback.java
+C:\DEV\Repo\Medicolab\Services\risque-service\src\main\java\com\medicolab\risqueservice\model\Note.java
+C:\DEV\Repo\Medicolab\Services\risque-service\src\main\java\com\medicolab\risqueservice\model\Patient.java
+C:\DEV\Repo\Medicolab\Services\risque-service\src\main\java\com\medicolab\risqueservice\model\Risque.java
+C:\DEV\Repo\Medicolab\Services\risque-service\src\main\java\com\medicolab\risqueservice\repository\NoteClient.java
+C:\DEV\Repo\Medicolab\Services\risque-service\src\main\java\com\medicolab\risqueservice\repository\PatientClient.java
+C:\DEV\Repo\Medicolab\Services\risque-service\src\main\java\com\medicolab\risqueservice\RisqueServiceApplication.java
+C:\DEV\Repo\Medicolab\Services\risque-service\src\main\java\com\medicolab\risqueservice\service\RisqueService.java
