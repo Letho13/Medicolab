@@ -1,8 +1,0 @@
-C:\DEV\Repo\Medicolab\Services\note-service\src\main\java\com\medicolab\note\configuration\RestTemplateConfig.java
-C:\DEV\Repo\Medicolab\Services\note-service\src\main\java\com\medicolab\note\controller\NoteController.java
-C:\DEV\Repo\Medicolab\Services\note-service\src\main\java\com\medicolab\note\exception\NoteNotFoundException.java
-C:\DEV\Repo\Medicolab\Services\note-service\src\main\java\com\medicolab\note\model\Note.java
-C:\DEV\Repo\Medicolab\Services\note-service\src\main\java\com\medicolab\note\NoteServiceApplication.java
-C:\DEV\Repo\Medicolab\Services\note-service\src\main\java\com\medicolab\note\repository\NoteRepository.java
-C:\DEV\Repo\Medicolab\Services\note-service\src\main\java\com\medicolab\note\service\NoteService.java
-C:\DEV\Repo\Medicolab\Services\note-service\src\main\java\com\medicolab\note\service\PatientClient.java
