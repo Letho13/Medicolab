@@ -1,8 +1,0 @@
-C:\DEV\Repo\Medicolab\Services\patient-service\src\main\java\com\medicolab\microservices\patient\controller\PatientController.java
-C:\DEV\Repo\Medicolab\Services\patient-service\src\main\java\com\medicolab\microservices\patient\exception\PatientNotFoundException.java
-C:\DEV\Repo\Medicolab\Services\patient-service\src\main\java\com\medicolab\microservices\patient\mapper\PatientMapper.java
-C:\DEV\Repo\Medicolab\Services\patient-service\src\main\java\com\medicolab\microservices\patient\model\Patient.java
-C:\DEV\Repo\Medicolab\Services\patient-service\src\main\java\com\medicolab\microservices\patient\model\PatientRequest.java
-C:\DEV\Repo\Medicolab\Services\patient-service\src\main\java\com\medicolab\microservices\patient\PatientServiceApplication.java
-C:\DEV\Repo\Medicolab\Services\patient-service\src\main\java\com\medicolab\microservices\patient\repository\PatientRepository.java
-C:\DEV\Repo\Medicolab\Services\patient-service\src\main\java\com\medicolab\microservices\patient\service\PatientService.java

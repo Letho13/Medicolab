@@ -1,8 +1,0 @@
-com\medicolab\microservices\patient\model\Patient.class
-com\medicolab\microservices\patient\repository\PatientRepository.class
-com\medicolab\microservices\patient\exception\PatientNotFoundException.class
-com\medicolab\microservices\patient\controller\PatientController.class
-com\medicolab\microservices\patient\model\PatientRequest.class
-com\medicolab\microservices\patient\service\PatientService.class
-com\medicolab\microservices\patient\PatientServiceApplication.class
-com\medicolab\microservices\patient\mapper\PatientMapper.class

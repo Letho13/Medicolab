@@ -1,7 +1,0 @@
-com\medicolab\gateway\config\JwtUtil.class
-com\medicolab\gateway\config\JwtAuthenticationManager.class
-com\medicolab\gateway\controller\AuthController.class
-com\medicolab\gateway\config\JwtAuthenticationFilter.class
-com\medicolab\gateway\GatewayApplication.class
-com\medicolab\gateway\config\JwtAuthenticationToken.class
-com\medicolab\gateway\config\SecurityConfiguration.class
