@@ -21,16 +21,30 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * Configuration de la sécurité pour l'application.
+ * Configure les règles de sécurité WebFlux, l'authentification via JWT,
+ * le CORS, et les utilisateurs en mémoire.
+ */
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfiguration {
 
     private final JwtUtil jwtUtil;
 
+
     public SecurityConfiguration(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 
+    /**
+     * Configure la chaîne de filtres de sécurité WebFlux.
+     * Désactive CSRF et form login, autorise certaines routes, et ajoute le filtre JWT.
+     *
+     * @param http configuration HTTP réactive
+     * @param jwtAuthenticationFilter filtre d'authentification JWT
+     * @return la chaîne de filtres de sécurité
+     */
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) {
 
@@ -50,16 +64,33 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+    /**
+     * Fournit un gestionnaire d'authentification personnalisé basé sur JWT.
+     *
+     * @param userDetailsService service utilisateur en mémoire
+     * @return gestionnaire d'authentification JWT
+     */
     @Bean
     public ReactiveAuthenticationManager reactiveAuthenticationManager(MapReactiveUserDetailsService userDetailsService) {
         return new JwtAuthenticationManager(jwtUtil, userDetailsService);
     }
 
+    /**
+     * Fournit le filtre d'authentification JWT à ajouter à la chaîne de sécurité.
+     *
+     * @param userDetailsService service utilisateur en mémoire
+     * @return filtre d'authentification JWT
+     */
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter(MapReactiveUserDetailsService userDetailsService) {
         return new JwtAuthenticationFilter(jwtUtil, userDetailsService);
     }
 
+    /**
+     * Configure le CORS pour autoriser les appels depuis le front-end.
+     *
+     * @return filtre CORS configuré
+     */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public CorsWebFilter corsWebFilter() {
@@ -76,6 +107,12 @@ public class SecurityConfiguration {
         return new CorsWebFilter(source);
     }
 
+    /**
+     * Crée un utilisateur en mémoire avec le rôle "USER".
+     * Utilisé pour l'accès admin en local et docker.
+     *
+     * @return service utilisateur avec un seul utilisateur "admin"
+     */
     @Bean
     public MapReactiveUserDetailsService userDetailsService() {
         UserDetails user = User.withUsername("admin")
@@ -84,6 +121,5 @@ public class SecurityConfiguration {
                 .build();
         return new MapReactiveUserDetailsService(user);
     }
-
 
 }

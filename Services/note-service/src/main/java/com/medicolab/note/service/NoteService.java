@@ -45,11 +45,6 @@ public class NoteService {
     }
 
 
-    public String niveauDeRisque(Note note) {
-
-
-        return "";
-    }
 
 
 }

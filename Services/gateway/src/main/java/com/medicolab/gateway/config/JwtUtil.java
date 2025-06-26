@@ -15,7 +15,6 @@ import java.util.Date;
 @Service
 public class JwtUtil {
 
-
     @Value("${security.jwt.secret}")
     private String secret;
 
@@ -24,11 +23,21 @@ public class JwtUtil {
 
     private SecretKey secretKey;
 
+    /**
+     * Initialise la clé secrète à partir de la chaîne encodée.
+     * Appelée automatiquement après l'injection des propriétés.
+     */
     @PostConstruct
     public void init() {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
+    /**
+     * Génère un token JWT signé pour un utilisateur donné.
+     *
+     * @param username le nom d'utilisateur à inclure dans le token
+     * @return le token JWT signé
+     */
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
@@ -38,6 +47,12 @@ public class JwtUtil {
                 .compact();
     }
 
+    /**
+     * Vérifie la validité d’un token JWT.
+     *
+     * @param token le token à valider
+     * @return {@code true} si le token est valide, sinon {@code false}
+     */
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -51,7 +66,12 @@ public class JwtUtil {
         }
     }
 
-
+    /**
+     * Extrait le username d’un token JWT.
+     *
+     * @param token le token JWT
+     * @return le username contenu dans le token
+     */
     public String getUsernameFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
@@ -59,7 +79,5 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
-
     }
-
 }
