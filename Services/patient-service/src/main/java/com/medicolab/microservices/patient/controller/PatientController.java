@@ -5,6 +5,7 @@ import com.medicolab.microservices.patient.model.Patient;
 import com.medicolab.microservices.patient.repository.PatientRepository;
 import com.medicolab.microservices.patient.service.PatientService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,13 @@ public class PatientController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Patient>> getAllPatients() {
-        List<Patient> patients = patientService.getAll();
+    public ResponseEntity<List<Patient>> getAllPatients(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<Patient> patientsPage = patientService.getAll(page, size);
+        List<Patient> patients = patientsPage.getContent();
+
         return new ResponseEntity<>(patients, HttpStatus.OK);
     }
 

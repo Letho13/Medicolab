@@ -7,6 +7,9 @@ import com.medicolab.microservices.patient.mapper.PatientMapper;
 import com.medicolab.microservices.patient.model.Patient;
 import com.medicolab.microservices.patient.repository.PatientRepository;
 import io.micrometer.common.util.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +27,9 @@ public class PatientService {
         ;
     }
 
-    public List<Patient> getAll() {
-        return patientRepository.findAll();
+    public Page<Patient> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return patientRepository.findAll(pageable);
     }
 
     public Patient findPatientById(Integer id) {

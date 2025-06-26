@@ -14,7 +14,10 @@ import java.io.InputStream;
 import java.text.Normalizer;
 import java.util.*;
 
-
+/**
+ * Service permettant d'analyser le niveau de risque d'un patient
+ * en fonction de ses notes médicales et de ses informations personnelles.
+ */
 @Service
 public class RisqueService {
 
@@ -25,6 +28,7 @@ public class RisqueService {
     private Map<List<String>, String> risquesTokensMap;
     private final FrenchStemmer stemmer = new FrenchStemmer();
 
+
     public RisqueService(PatientClient patientClient, NoteClient noteClient) throws Exception {
         this.patientClient = patientClient;
         this.noteClient = noteClient;
@@ -32,7 +36,13 @@ public class RisqueService {
         this.risquesTokensMap = prepareRisqueTokensMap(risque.getRisque());
     }
 
-
+    /**
+     * Analyse le risque du patient en fonction de ses notes, son âge et son genre.
+     *
+     * @param id identifiant du patient
+     * @return le niveau de risque : None, Borderline, In Danger, Early onset, etc.
+     * @throws Exception en cas d'erreur lors de la récupération des données
+     */
     public String analyseRisque(Integer id) throws Exception {
         Patient patient = patientClient.getPatientById(id);
 
@@ -61,7 +71,12 @@ public class RisqueService {
         }
     }
 
-
+    /**
+     * Charge les risques à partir du fichier JSON situé dans les ressources.
+     *
+     * @return un objet Risque contenant les mots-clés de détection
+     * @throws Exception si le fichier est introuvable ou mal formé
+     */
     public Risque chargerRisques() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         InputStream input = new ClassPathResource("data/Risques.JSON").getInputStream();
@@ -70,12 +85,17 @@ public class RisqueService {
 
 
     public List<Note> listNotesPatient(Patient patient) {
-
         List<Note> notes = noteClient.getNotesByPatientId(patient.getId());
         return notes != null ? notes : Collections.emptyList();
     }
 
-
+    /**
+     * Calcule le nombre de risques détectés dans les notes du patient.
+     *
+     * @param patient patient à analyser
+     * @return nombre de risques détectés
+     * @throws Exception en cas d'erreur d'analyse
+     */
     public int nombreDeRisque(Patient patient) throws Exception {
         List<Note> notes = listNotesPatient(patient);
         Set<String> risquesDetectes = new HashSet<>();
@@ -96,7 +116,7 @@ public class RisqueService {
         return risquesDetectes.size();
     }
 
-
+    // Prépare une map de risques avec leur version tokenisée + stemmée
     private Map<List<String>, String> prepareRisqueTokensMap(List<String> risquesList) {
         Map<List<String>, String> map = new HashMap<>();
         for (String risque : risquesList) {
@@ -106,6 +126,7 @@ public class RisqueService {
         return map;
     }
 
+    // Tokenise et applique le stemming sur un texte
     private List<String> tokenizeAndStem(String text) {
         String normalized = normalize(text);
         String[] mots = normalized.split("\\s+");
@@ -118,6 +139,7 @@ public class RisqueService {
         return stemmedTokens;
     }
 
+    // Nettoie et normalise un texte
     private String normalize(String text) {
         if (text == null) return "";
         String normalized = Normalizer.normalize(text, Normalizer.Form.NFD);
@@ -127,6 +149,7 @@ public class RisqueService {
         return normalized.toLowerCase();
     }
 
+    // Applique l'algorithme de stemming (racine du mot)
     private synchronized String stem(String mot) {
         stemmer.setCurrent(mot);
         stemmer.stem();
@@ -134,7 +157,12 @@ public class RisqueService {
     }
 
     /**
-     * Vérifie si 'sequence' est contenue comme une sous-liste contiguë dans 'list'.
+     * Vérifie si une séquence de mots est contenue dans une liste de tokens.
+     * Utilisé pour détecter si une expression indicative de risque est présente.
+     *
+     * @param list liste de mots
+     * @param sequence séquence à rechercher
+     * @return vrai si la séquence est trouvée dans la liste
      */
     private boolean containsSequence(List<String> list, List<String> sequence) {
         if (sequence.isEmpty() || list.isEmpty() || sequence.size() > list.size()) {
@@ -154,4 +182,3 @@ public class RisqueService {
     }
 
 }
-

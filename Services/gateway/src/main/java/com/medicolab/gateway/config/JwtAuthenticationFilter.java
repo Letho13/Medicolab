@@ -10,8 +10,11 @@ import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 
+/**
+ * Intercepte les requêtes HTTP pour extraire, valider
+ * un token JWT et établir le contexte de sécurité si l'utilisateur est authentifié.
+ */
 public class JwtAuthenticationFilter implements WebFilter {
-
 
     private final JwtUtil jwtUtil;
     private final MapReactiveUserDetailsService userDetailsService;
@@ -21,7 +24,14 @@ public class JwtAuthenticationFilter implements WebFilter {
         this.userDetailsService = userDetailsService;
     }
 
-
+    /**
+     * Intercepte chaque requête HTTP, extrait le JWT depuis l’en-tête Authorization,
+     * le valide, puis injecte l’authentification dans le contexte de sécurité réactif si possible.
+     *
+     * @param exchange l'échange HTTP WebFlux (requête + réponse)
+     * @param chain la chaîne des filtres à exécuter
+     * @return un flux réactif continuant la chaîne de traitement
+     */
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 
@@ -37,7 +47,6 @@ public class JwtAuthenticationFilter implements WebFilter {
         try {
             username = jwtUtil.getUsernameFromToken(jwt);
         } catch (Exception e) {
-
             return chain.filter(exchange);
         }
 
@@ -61,8 +70,6 @@ public class JwtAuthenticationFilter implements WebFilter {
                 })
                 .switchIfEmpty(chain.filter(exchange));
     }
-
-
 }
 
 

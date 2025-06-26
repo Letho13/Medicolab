@@ -47,11 +47,4 @@ public class NoteController {
     }
 
 
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity updateNoteById(@RequestBody String patId) {
-//        noteService.updateNoteById(patId);
-//        return (ResponseEntity) ResponseEntity.status(HttpStatus.OK); // je comprend pas bien pq je dois mettre ce la comme ça
-//    }
-
-
 }
